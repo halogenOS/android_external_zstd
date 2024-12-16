@@ -41,6 +41,49 @@ license {
     ],
 }
 
+cc_binary {
+    name: "zstd",
+
+    cflags: [
+        "-DZSTD_GZCOMPRESS",
+        "-DZSTD_GZDECOMPRESS",
+        "-DZSTD_LZ4COMPRESS",
+        "-DZSTD_LZ4DECOMPRESS",
+        "-DZSTD_MULTITHREAD",
+        "-Wall",
+        "-Werror",
+    ],
+
+    shared_libs: [
+        "liblz4",
+        "libz",
+        "libzstd",
+    ],
+
+    srcs: ["programs/*.c"],
+    system_ext_specific: true,
+
+    required: ["zstdgrep", "zstdless"],
+
+    symlinks: [
+        "zstdcat",
+        "zstdmt",
+        "unzstd",
+    ],
+}
+
+sh_binary {
+    name: "zstdgrep",
+    src: "programs/zstdgrep",
+    system_ext_specific: true,
+}
+
+sh_binary {
+    name: "zstdless",
+    src: "programs/zstdless",
+    system_ext_specific: true,
+}
+
 cc_library {
     name: "libzstd",
     min_sdk_version: "apex_inherit",
@@ -61,6 +104,7 @@ cc_library {
         "//external/dwarves:__subpackages__",
         "//external/elfutils:__subpackages__",
         "//external/libbpf:__subpackages__",
+        "//external/rsync:__subpackages__",
         "//external/squashfs-tools/squashfs-tools:__subpackages__",
         "//external/stg:__subpackages__",
         "//frameworks/libs/binary_translation/tools:__subpackages__",
@@ -77,6 +121,7 @@ cc_library {
     product_available: true,
     recovery_available: true,
     vendor_available: true,
+    system_ext_specific: true,
     host_supported: true,
     native_bridge_supported: true,
     ramdisk_available: true,
@@ -118,6 +163,7 @@ cc_defaults {
         "lib/dictBuilder",
         "tests/fuzz",
     ],
+    system_ext_specific: true,
     cflags: [
         "-Wno-error",
         "-Wno-pointer-arith",
